@@ -19,12 +19,15 @@ namespace BorePlayerMovement
         private InputAction IA_jumpAction;
         private Vector2 moveAmount;
         private RaycastHit2D raycastHit2D;
+        private float rayLenght = 0.02f;
+
 
         [Header("Parameters")]
         public float WalkSpeed = 5;
         public float JumpSpeed = 5;
         private bool isGrounded;
         [SerializeField] private float _time;
+
 
         private void OnEnable()
         {
@@ -56,11 +59,6 @@ namespace BorePlayerMovement
 
         }
 
-        public void Jump()
-        {
-            rb.AddForceY(JumpSpeed, ForceMode2D.Impulse);
-        }
-
         void FixedUpdate()
         {
             Walking();
@@ -68,16 +66,34 @@ namespace BorePlayerMovement
             _time += Time.deltaTime;
         }
 
+        public void Jump()
+        {
+            rb.AddForceY(JumpSpeed, ForceMode2D.Impulse);
+        }
+
         private void Walking()
         {
             rb.linearVelocityX = moveAmount.x * WalkSpeed;
         }
 
+        #region Colision
         private void CheckGrounded()
         {
-            RaycastHit2D rc = Physics2D.Raycast(col.bounds.center, Vector2.down, 2, layerMask);
-            isGrounded = rc.collider != null;
-            Debug.DrawRay(col.bounds.center, Vector2.down * 2, Color.red, 2);
+            // c - Center | l - Left | r - Right | rc - RayCast
+            Vector2 cOrigin = col.bounds.center - new Vector3(0, col.bounds.extents.y, 0);
+            Vector2 lOrigin = col.bounds.center - new Vector3(col.bounds.extents.x, col.bounds.extents.y, 0);
+            Vector2 rOrigin = col.bounds.center + new Vector3(col.bounds.extents.x, -col.bounds.extents.y, 0);
+
+            RaycastHit2D cRc = Physics2D.Raycast(cOrigin, Vector2.down, rayLenght, layerMask);
+            RaycastHit2D lRc = Physics2D.Raycast(lOrigin, Vector2.down, rayLenght, layerMask);
+            RaycastHit2D rRc = Physics2D.Raycast(rOrigin, Vector2.down, rayLenght, layerMask);
+            isGrounded = cRc.collider != null || lRc.collider != null || rRc.collider != null;
+
+            // ** DEBUG **
+            Debug.DrawRay(cOrigin, Vector2.down * rayLenght, Color.red);
+            Debug.DrawRay(lOrigin, Vector2.down * rayLenght, Color.red);
+            Debug.DrawRay(rOrigin, Vector2.down * rayLenght, Color.red);
         }
+        #endregion
     }
 }
