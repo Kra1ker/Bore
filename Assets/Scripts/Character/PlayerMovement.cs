@@ -10,25 +10,26 @@ namespace BorePlayerMovement
     public class PlayerMovement : MonoBehaviour
     {
         [Header("Settings")]
+        [SerializeField] private float _time;
         private Rigidbody2D rb;
         private BoxCollider2D col;
-        private LayerMask layerMask;
-
+        [SerializeField] private LayerMask layerMask;
+        [SerializeField] private PhysicsMaterial2D slipPM;
+        [SerializeField] private PhysicsMaterial2D solidPM;
         public InputActionAsset InputActions;
         private InputAction IA_moveAction;
         private InputAction IA_jumpAction;
+        private InputAction IA_switchPhysics;
         private Vector2 moveAmount;
         private RaycastHit2D raycastHit2D;
-        private float rayLenght = 0.02f;
-
 
         [Header("Parameters")]
         public float WalkSpeed = 5;
         public float JumpSpeed = 5;
         private bool isGrounded;
-        [SerializeField] private float _time;
+        [SerializeField] private float rayLenght = 0.02f;
 
-
+        #region Initialization
         private void OnEnable()
         {
             InputActions.FindActionMap("Player").Enable();
@@ -42,11 +43,13 @@ namespace BorePlayerMovement
         {
             IA_moveAction = InputSystem.actions.FindAction("Move");
             IA_jumpAction = InputSystem.actions.FindAction("Jump");
+            IA_switchPhysics = InputSystem.actions.FindAction("Previous");
 
             rb = GetComponent<Rigidbody2D>();
             col = GetComponent<BoxCollider2D>();
             layerMask = LayerMask.GetMask("Ground");
         }
+        #endregion
 
         private void Update()
         {
@@ -56,7 +59,6 @@ namespace BorePlayerMovement
             {
                 Jump();
             }
-
         }
 
         void FixedUpdate()
@@ -66,14 +68,14 @@ namespace BorePlayerMovement
             _time += Time.deltaTime;
         }
 
-        public void Jump()
-        {
-            rb.AddForceY(JumpSpeed, ForceMode2D.Impulse);
-        }
-
         private void Walking()
         {
             rb.linearVelocityX = moveAmount.x * WalkSpeed;
+        }
+
+        public void Jump()
+        {
+            rb.AddForceY(JumpSpeed, ForceMode2D.Impulse);
         }
 
         #region Colision
