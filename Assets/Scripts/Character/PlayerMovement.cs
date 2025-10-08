@@ -25,7 +25,7 @@ namespace BorePlayerMovement
 
         [Header("Parameters")]
         public float WalkSpeed = 5;
-        public float JumpSpeed = 15;
+        public float JumpSpeed = 25;
         private bool isGrounded;
         [SerializeField] private float rayLenght = 0.02f;
 
