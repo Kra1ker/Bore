@@ -1824,7 +1824,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 3
+  m_Mass: 2
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
@@ -1925,15 +1925,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BorePlayerMovement.PlayerMovement
   _time: 0
+  _frameLeftGrounded: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 0
-  slipPM: {fileID: 0}
-  solidPM: {fileID: 0}
   InputActions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   WalkSpeed: 5
-  JumpSpeed: 25
+  JumpSpeed: 20
   rayLenght: 0.02
+  coyoteEnable: 1
+  CoyoteTime: 1.5
 --- !u!61 &1858553282
 BoxCollider2D:
   m_ObjectHideFlags: 0

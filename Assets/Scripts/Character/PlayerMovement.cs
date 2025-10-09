@@ -11,23 +11,24 @@ namespace BorePlayerMovement
     {
         [Header("Settings")]
         [SerializeField] private float _time;
+        [SerializeField] private float _frameLeftGrounded;
         private Rigidbody2D rb;
         private BoxCollider2D col;
         [SerializeField] private LayerMask layerMask;
-        [SerializeField] private PhysicsMaterial2D slipPM;
-        [SerializeField] private PhysicsMaterial2D solidPM;
         public InputActionAsset InputActions;
         private InputAction IA_moveAction;
         private InputAction IA_jumpAction;
-        private InputAction IA_switchPhysics;
         private Vector2 moveAmount;
         private RaycastHit2D raycastHit2D;
 
         [Header("Parameters")]
         public float WalkSpeed = 5;
-        public float JumpSpeed = 25;
+        public float JumpSpeed = 20;
         private bool isGrounded;
         [SerializeField] private float rayLenght = 0.02f;
+        public bool coyoteEnable;
+        public float CoyoteTime = 1.5f;
+        public bool canUseCoyote => coyoteEnable && !isGrounded && _time < _frameLeftGrounded + CoyoteTime;
 
         #region Initialization
         private void OnEnable()
@@ -43,7 +44,6 @@ namespace BorePlayerMovement
         {
             IA_moveAction = InputSystem.actions.FindAction("Move");
             IA_jumpAction = InputSystem.actions.FindAction("Jump");
-            IA_switchPhysics = InputSystem.actions.FindAction("Previous");
 
             rb = GetComponent<Rigidbody2D>();
             col = GetComponent<BoxCollider2D>();
@@ -51,11 +51,12 @@ namespace BorePlayerMovement
         }
         #endregion
 
+        #region PlayerState
         private void Update()
         {
             moveAmount = IA_moveAction.ReadValue<Vector2>();
 
-            if (IA_jumpAction.WasPressedThisFrame() && isGrounded)
+            if (IA_jumpAction.WasPressedThisFrame() && (isGrounded || canUseCoyote))
             {
                 Jump();
             }
@@ -66,6 +67,10 @@ namespace BorePlayerMovement
             Walking();
             CheckGrounded();
             _time += Time.deltaTime;
+            if (isGrounded != true)
+            {
+                _frameLeftGrounded = _time;
+            }
         }
 
         private void Walking()
@@ -73,10 +78,12 @@ namespace BorePlayerMovement
             rb.linearVelocityX = moveAmount.x * WalkSpeed;
         }
 
+
         public void Jump()
         {
             rb.AddForceY(JumpSpeed, ForceMode2D.Impulse);
         }
+        #endregion
 
         #region Colision
         private void CheckGrounded()
