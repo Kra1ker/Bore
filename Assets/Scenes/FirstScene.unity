@@ -1934,7 +1934,7 @@ MonoBehaviour:
   JumpSpeed: 20
   rayLenght: 0.02
   coyoteEnable: 1
-  CoyoteTime: 1.5
+  CoyoteTime: 0.5
 --- !u!61 &1858553282
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace BorePlayerMovement
     {
         [Header("Settings")]
         [SerializeField] private float _time;
-        [SerializeField] private float _frameLeftGrounded;
+        [SerializeField] private float _frameLeftGrounded = float.MinValue;
         private Rigidbody2D rb;
         private BoxCollider2D col;
         [SerializeField] private LayerMask layerMask;
@@ -19,16 +20,18 @@ namespace BorePlayerMovement
         private InputAction IA_moveAction;
         private InputAction IA_jumpAction;
         private Vector2 moveAmount;
-        private RaycastHit2D raycastHit2D;
 
         [Header("Parameters")]
         public float WalkSpeed = 5;
         public float JumpSpeed = 20;
+
+        [Header("State")]
         private bool isGrounded;
+        private bool _grounded;
         [SerializeField] private float rayLenght = 0.02f;
-        public bool coyoteEnable;
+        public bool coyoteUsable;
         public float CoyoteTime = 1.5f;
-        public bool canUseCoyote => coyoteEnable && !isGrounded && _time < _frameLeftGrounded + CoyoteTime;
+        public bool canUseCoyote => coyoteUsable && !isGrounded && _time < _frameLeftGrounded + CoyoteTime;
 
         #region Initialization
         private void OnEnable()
@@ -66,11 +69,7 @@ namespace BorePlayerMovement
         {
             Walking();
             CheckGrounded();
-            _time += Time.deltaTime;
-            if (isGrounded != true)
-            {
-                _frameLeftGrounded = _time;
-            }
+            _time += Time.fixedDeltaTime;
         }
 
         private void Walking()
@@ -78,10 +77,12 @@ namespace BorePlayerMovement
             rb.linearVelocityX = moveAmount.x * WalkSpeed;
         }
 
-
         public void Jump()
         {
             rb.AddForceY(JumpSpeed, ForceMode2D.Impulse);
+            coyoteUsable = false;
+            _grounded = false;
+            isGrounded = false;
         }
         #endregion
 
@@ -97,6 +98,18 @@ namespace BorePlayerMovement
             RaycastHit2D lRc = Physics2D.Raycast(lOrigin, Vector2.down, rayLenght, layerMask);
             RaycastHit2D rRc = Physics2D.Raycast(rOrigin, Vector2.down, rayLenght, layerMask);
             isGrounded = cRc.collider != null || lRc.collider != null || rRc.collider != null;
+
+            // Checking is NOW character grounded
+            if (!_grounded && isGrounded)
+            {
+                _grounded = true;
+                coyoteUsable = true;
+            }
+            else if (_grounded && !isGrounded)
+            {
+                _grounded = false;
+                _frameLeftGrounded = _time;
+            }
 
             // ** DEBUG **
             Debug.DrawRay(cOrigin, Vector2.down * rayLenght, Color.red);
