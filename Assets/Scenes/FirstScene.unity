@@ -1925,7 +1925,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BorePlayerMovement.PlayerMovement
   _time: 0
-  _frameLeftGrounded: 0
+  _frameLeftGrounded: -3.4028235e+38
   layerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -1933,8 +1933,8 @@ MonoBehaviour:
   WalkSpeed: 5
   JumpSpeed: 20
   rayLenght: 0.02
-  coyoteEnable: 1
-  CoyoteTime: 0.5
+  coyoteUsable: 0
+  CoyoteTime: 0.1
 --- !u!61 &1858553282
 BoxCollider2D:
   m_ObjectHideFlags: 0

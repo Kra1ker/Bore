@@ -12,6 +12,9 @@ public class CameraController : MonoBehaviour
     [Header("Parameters")]public float RotateSpeed = 0.1f;
     public float cameraOffset = 0.3f;
     public float standardOffset = 0.19f;
+    private float _timeLookReleased = 0f;
+    [SerializeField] private float returnDelay = 0.5f;
+    [SerializeField] private float lookClamp = 1f;
 
     private void OnEnable()
     {
@@ -34,17 +37,23 @@ public class CameraController : MonoBehaviour
 
     private void Shift()
     {
-        if (lookAmount.y > 0 && cameraOffset * lookAmount.y >= standardOffset)
+        lookAmount.y = Mathf.Clamp(lookAmount.y, -lookClamp, lookClamp);
+
+        if (lookAmount.y > 0 && cameraOffset * lookAmount.y >= standardOffset) // Mathf.Abs(lookAmount.y) > 0.05f
         {
+            _timeLookReleased = 0f;
             CM_PComposer.Composition.ScreenPosition.y = Mathf.Lerp(CM_PComposer.Composition.ScreenPosition.y, cameraOffset * lookAmount.y, RotateSpeed);
         }
-        else if (lookAmount.y < 0 && cameraOffset * lookAmount.y <= standardOffset)
+        else if (lookAmount.y < 0 && cameraOffset * lookAmount.y <= standardOffset) // Mathf.Abs(lookAmount.y) < 0.05f
         {
+            _timeLookReleased = 0f;
             CM_PComposer.Composition.ScreenPosition.y = Mathf.Lerp(CM_PComposer.Composition.ScreenPosition.y, cameraOffset * lookAmount.y, RotateSpeed);
         }
         else
         {
-            CM_PComposer.Composition.ScreenPosition.y = Mathf.Lerp(CM_PComposer.Composition.ScreenPosition.y, standardOffset, RotateSpeed);
+            _timeLookReleased += Time.deltaTime;
+            if (_timeLookReleased > returnDelay)
+                CM_PComposer.Composition.ScreenPosition.y = Mathf.Lerp(CM_PComposer.Composition.ScreenPosition.y, standardOffset, RotateSpeed);
         }
     }
 }

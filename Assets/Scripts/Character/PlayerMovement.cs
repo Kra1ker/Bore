@@ -30,7 +30,7 @@ namespace BorePlayerMovement
         private bool _grounded;
         [SerializeField] private float rayLenght = 0.02f;
         public bool coyoteUsable;
-        public float CoyoteTime = 1.5f;
+        public float CoyoteTime = 0.15f;
         public bool canUseCoyote => coyoteUsable && !isGrounded && _time < _frameLeftGrounded + CoyoteTime;
 
         #region Initialization
