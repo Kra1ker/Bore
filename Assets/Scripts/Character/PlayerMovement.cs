@@ -16,9 +16,12 @@ namespace BorePlayerMovement
         private Rigidbody2D rb;
         private BoxCollider2D col;
         [SerializeField] private LayerMask layerMask;
-        public InputActionAsset InputActions;
+        /* public InputActionAsset InputActions;
         private InputAction IA_moveAction;
-        private InputAction IA_jumpAction;
+        private InputAction IA_jumpAction;  */ // Old Input System v. 0.1
+        private PlayerInput playerInput;
+        private InputAction moveAction;
+        private InputAction jumpAction;
         private Vector2 moveAmount;
 
         [Header("Parameters")]
@@ -36,17 +39,20 @@ namespace BorePlayerMovement
         #region Initialization
         private void OnEnable()
         {
-            InputActions.FindActionMap("Player").Enable();
+            // InputActions.FindActionMap("Player").Enable(); // Old Input System v. 0.1
         }
         private void OnDisable()
         {
-            InputActions.FindActionMap("Player").Disable();
+            // InputActions.FindActionMap("Player").Disable(); // Old Input System v. 0.1
         }
 
         private void Awake()
         {
-            IA_moveAction = InputSystem.actions.FindAction("Move");
-            IA_jumpAction = InputSystem.actions.FindAction("Jump");
+            /* IA_moveAction = InputSystem.actions.FindAction("Move");
+            IA_jumpAction = InputSystem.actions.FindAction("Jump"); */ // Old Input System v. 0.1
+            playerInput = GetComponent<PlayerInput>();
+            moveAction = playerInput.actions["Move"];
+            jumpAction = playerInput.actions["Jump"];
 
             rb = GetComponent<Rigidbody2D>();
             col = GetComponent<BoxCollider2D>();
@@ -57,9 +63,10 @@ namespace BorePlayerMovement
         #region PlayerState
         private void Update()
         {
-            moveAmount = IA_moveAction.ReadValue<Vector2>();
+            moveAmount = moveAction.ReadValue<Vector2>();
+            Debug.Log("Move = " + moveAction.ReadValue<Vector2>());
 
-            if (IA_jumpAction.WasPressedThisFrame() && (isGrounded || canUseCoyote))
+            if (jumpAction.WasPressedThisFrame() && (isGrounded || canUseCoyote))
             {
                 Jump();
             }
