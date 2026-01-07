@@ -2378,7 +2378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62cb0544421d55f4a8b46c2149ca3a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SplitScreenControler
-  split_Distance: 0
+  split_Distance: 6
   smooth: 5
   vertical_Split: 1
   player_1: {fileID: 106506197}

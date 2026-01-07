@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Unity.Cinemachine;
 
 public class SplitScreenControler : MonoBehaviour
 {
@@ -7,12 +8,21 @@ public class SplitScreenControler : MonoBehaviour
     [SerializeField] private float split_Distance = 15f;
     [SerializeField] private float smooth = 5f;
     [SerializeField] private bool vertical_Split = true;
+    [SerializeField] private float minZoom = 5f;
+    [SerializeField] private float maxZoom = 8f;
+    [SerializeField] private float zoomStartDistance = 3f;
+    [SerializeField] private float zoomEndDistance = 6f;
+    [SerializeField] private float zoomSmooth = 3f;
+
     [Header("Players")]
     [SerializeField] private Transform player_1;
     [SerializeField] private Transform player_2;
+
     [Header("Cameras")]
     [SerializeField] private Camera camera_1;
     [SerializeField] private Camera camera_2;
+    [SerializeField] private CinemachineCamera cinemachineCamera_1;
+    [SerializeField] private CinemachineCamera cinemachineCamera_2;
     private bool isSplit;
     
     void Update()
@@ -24,8 +34,22 @@ public class SplitScreenControler : MonoBehaviour
         {
             isSplit = should_Split;
         }
+        if(!should_Split)
+        UpdateZoom(distance);
 
         UpdateViewports();
+    }
+
+    void UpdateZoom(float distance)
+    {
+        float t = Mathf.InverseLerp(zoomStartDistance, zoomEndDistance, distance);
+        float zoom = Mathf.Lerp(minZoom, maxZoom, t);
+
+        cinemachineCamera_1.Lens.OrthographicSize = 
+            Mathf.Lerp(cinemachineCamera_1.Lens.OrthographicSize, zoom, Time.deltaTime * zoomSmooth);
+
+        cinemachineCamera_2.Lens.OrthographicSize =
+            Mathf.Lerp(cinemachineCamera_2.Lens.OrthographicSize, zoom, Time.deltaTime * zoomSmooth);
     }
 
     void UpdateViewports()
