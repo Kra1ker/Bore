@@ -2381,10 +2381,17 @@ MonoBehaviour:
   split_Distance: 6
   smooth: 5
   vertical_Split: 1
+  minZoom: 5
+  maxZoom: 8
+  zoomStartDistance: 3
+  zoomEndDistance: 6
+  zoomSmooth: 3
   player_1: {fileID: 106506197}
   player_2: {fileID: 738025294}
   camera_1: {fileID: 519420031}
   camera_2: {fileID: 152231948}
+  cinemachineCamera_1: {fileID: 1472672376}
+  cinemachineCamera_2: {fileID: 2066472212}
 --- !u!1 &2066472208
 GameObject:
   m_ObjectHideFlags: 0
