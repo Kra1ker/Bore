@@ -39,12 +39,12 @@ public class CameraController : MonoBehaviour
     {
         lookAmount.y = Mathf.Clamp(lookAmount.y, -lookClamp, lookClamp);
 
-        if (lookAmount.y > 0 && cameraOffset * lookAmount.y >= standardOffset) // Mathf.Abs(lookAmount.y) > 0.05f
+        if (lookAmount.y > 0 && cameraOffset * lookAmount.y >= standardOffset)
         {
             _timeLookReleased = 0f;
             CM_PComposer.Composition.ScreenPosition.y = Mathf.Lerp(CM_PComposer.Composition.ScreenPosition.y, cameraOffset * lookAmount.y, RotateSpeed);
         }
-        else if (lookAmount.y < 0 && cameraOffset * lookAmount.y <= standardOffset) // Mathf.Abs(lookAmount.y) < 0.05f
+        else if (lookAmount.y < 0 && cameraOffset * lookAmount.y <= standardOffset)
         {
             _timeLookReleased = 0f;
             CM_PComposer.Composition.ScreenPosition.y = Mathf.Lerp(CM_PComposer.Composition.ScreenPosition.y, cameraOffset * lookAmount.y, RotateSpeed);

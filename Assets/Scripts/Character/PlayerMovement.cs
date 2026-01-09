@@ -18,7 +18,7 @@ namespace BorePlayerMovement
         [SerializeField] private LayerMask layerMask;
         /* public InputActionAsset InputActions;
         private InputAction IA_moveAction;
-        private InputAction IA_jumpAction;  */ // Old Input System v. 0.1
+        private InputAction IA_jumpAction;  */                  // Old Input System v. 0.1
         private PlayerInput playerInput;
         private InputAction moveAction;
         private InputAction jumpAction;
@@ -37,14 +37,14 @@ namespace BorePlayerMovement
         public bool canUseCoyote => coyoteUsable && !isGrounded && _time < _frameLeftGrounded + CoyoteTime;
 
         #region Initialization
-        private void OnEnable()
+        /* private void OnEnable()
         {
-            // InputActions.FindActionMap("Player").Enable(); // Old Input System v. 0.1
+            InputActions.FindActionMap("Player").Enable();
         }
         private void OnDisable()
         {
-            // InputActions.FindActionMap("Player").Disable(); // Old Input System v. 0.1
-        }
+            InputActions.FindActionMap("Player").Disable();
+        }   */                                                          // Old Input System v. 0.1
 
         private void Awake()
         {

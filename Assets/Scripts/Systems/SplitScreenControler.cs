@@ -5,9 +5,9 @@ using Unity.Cinemachine;
 public class SplitScreenControler : MonoBehaviour
 {
     [Header("Split Screen Parameters")]
-    [SerializeField] private float split_Distance = 15f;
+    [SerializeField] private float splitDistance = 15f;
     [SerializeField] private float smooth = 5f;
-    [SerializeField] private bool vertical_Split = true;
+    [SerializeField] private bool verticalSplit = true;
     [SerializeField] private float minZoom = 5f;
     [SerializeField] private float maxZoom = 8f;
     [SerializeField] private float zoomStartDistance = 3f;
@@ -15,26 +15,26 @@ public class SplitScreenControler : MonoBehaviour
     [SerializeField] private float zoomSmooth = 3f;
 
     [Header("Players")]
-    [SerializeField] private Transform player_1;
-    [SerializeField] private Transform player_2;
+    [SerializeField] private Transform player1;
+    [SerializeField] private Transform player2;
 
     [Header("Cameras")]
-    [SerializeField] private Camera camera_1;
-    [SerializeField] private Camera camera_2;
-    [SerializeField] private CinemachineCamera cinemachineCamera_1;
-    [SerializeField] private CinemachineCamera cinemachineCamera_2;
+    [SerializeField] private Camera camera1;
+    [SerializeField] private Camera camera2;
+    [SerializeField] private CinemachineCamera cinemachineCamera1;
+    [SerializeField] private CinemachineCamera cinemachineCamera2;
     private bool isSplit;
     
     void Update()
     {
-        float distance = Vector3.Distance(player_1.position, player_2.position);
-        bool should_Split = distance > split_Distance;
+        float distance = Vector3.Distance(player1.position, player2.position);
+        bool shouldSplit = distance > splitDistance;
         
-        if(should_Split != isSplit)
+        if(shouldSplit != isSplit)
         {
-            isSplit = should_Split;
+            isSplit = shouldSplit;
         }
-        if(!should_Split)
+        if(!shouldSplit)
         UpdateZoom(distance);
 
         UpdateViewports();
@@ -45,30 +45,30 @@ public class SplitScreenControler : MonoBehaviour
         float t = Mathf.InverseLerp(zoomStartDistance, zoomEndDistance, distance);
         float zoom = Mathf.Lerp(minZoom, maxZoom, t);
 
-        cinemachineCamera_1.Lens.OrthographicSize = 
-            Mathf.Lerp(cinemachineCamera_1.Lens.OrthographicSize, zoom, Time.deltaTime * zoomSmooth);
+        cinemachineCamera1.Lens.OrthographicSize = 
+            Mathf.Lerp(cinemachineCamera1.Lens.OrthographicSize, zoom, Time.deltaTime * zoomSmooth);
 
-        cinemachineCamera_2.Lens.OrthographicSize =
-            Mathf.Lerp(cinemachineCamera_2.Lens.OrthographicSize, zoom, Time.deltaTime * zoomSmooth);
+        cinemachineCamera2.Lens.OrthographicSize =
+            Mathf.Lerp(cinemachineCamera2.Lens.OrthographicSize, zoom, Time.deltaTime * zoomSmooth);
     }
 
     void UpdateViewports()
     {
         if (!isSplit)
         {
-            camera_1.rect = LerpRect(camera_1.rect, new Rect(0, 0, 1, 1));
-            camera_2.rect = LerpRect(camera_2.rect, new Rect(0, 0, 0, 0));
+            camera1.rect = LerpRect(camera1.rect, new Rect(0, 0, 1, 1));
+            camera2.rect = LerpRect(camera2.rect, new Rect(0, 0, 0, 0));
         }
         else
         {
-            if(vertical_Split)
+            if(verticalSplit)
             {
-                camera_1.rect = LerpRect(camera_1.rect, new Rect(0f, 0f, 0.5f, 1f));
-                camera_2.rect = LerpRect(camera_2.rect, new Rect(0.5f, 0f, 0.5f, 1f));
+                camera1.rect = LerpRect(camera1.rect, new Rect(0f, 0f, 0.5f, 1f));
+                camera2.rect = LerpRect(camera2.rect, new Rect(0.5f, 0f, 0.5f, 1f));
             } else
             {
-                camera_1.rect = LerpRect(camera_1.rect, new Rect(0f, 0.5f, 1f, 0.5f));
-                camera_2.rect = LerpRect(camera_2.rect, new Rect(0f, 0f, 1f, 0.5f));
+                camera1.rect = LerpRect(camera1.rect, new Rect(0f, 0.5f, 1f, 0.5f));
+                camera2.rect = LerpRect(camera2.rect, new Rect(0f, 0f, 1f, 0.5f));
             }
         }
     }
@@ -95,5 +95,5 @@ public class SplitScreenControler : MonoBehaviour
         if (!isSplit) return;
         isSplit = false;
         Debug.Log("Split OFF");
-    } */ // SplitScreen version: Concept
+    }   */                                                // SplitScreen version: Concept
 }
