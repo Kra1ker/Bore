@@ -64,7 +64,7 @@ namespace BorePlayerMovement
         private void Update()
         {
             moveAmount = moveAction.ReadValue<Vector2>();
-            Debug.Log("Move = " + moveAction.ReadValue<Vector2>());
+            // Debug.Log("Move = " + moveAction.ReadValue<Vector2>());
 
             if (jumpAction.WasPressedThisFrame() && (isGrounded || canUseCoyote))
             {

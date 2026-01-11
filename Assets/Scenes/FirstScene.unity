@@ -280,7 +280,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &152231945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1717,6 +1717,7 @@ Transform:
   m_Children:
   - {fileID: 2028463154}
   - {fileID: 488109893}
+  - {fileID: 2120332515}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1315342678
@@ -1992,7 +1993,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1472672374}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1af963bfaaecddf41b84b3a1f0236831, type: 3}
   m_Name: 
@@ -2345,12 +2346,12 @@ GameObject:
   - component: {fileID: 2028463154}
   - component: {fileID: 2028463155}
   m_Layer: 0
-  m_Name: SplitScreenManager
+  m_Name: RECT_SplitScreenManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2028463154
 Transform:
   m_ObjectHideFlags: 0
@@ -2378,20 +2379,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62cb0544421d55f4a8b46c2149ca3a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SplitScreenControler
-  split_Distance: 6
+  splitDistance: 7.5
   smooth: 5
-  vertical_Split: 1
+  verticalSplit: 1
   minZoom: 5
   maxZoom: 8
   zoomStartDistance: 3
   zoomEndDistance: 6
   zoomSmooth: 3
-  player_1: {fileID: 106506197}
-  player_2: {fileID: 738025294}
-  camera_1: {fileID: 519420031}
-  camera_2: {fileID: 152231948}
-  cinemachineCamera_1: {fileID: 1472672376}
-  cinemachineCamera_2: {fileID: 2066472212}
+  player1: {fileID: 106506197}
+  player2: {fileID: 738025294}
+  camera1: {fileID: 519420031}
+  camera2: {fileID: 152231948}
+  cinemachineCamera1: {fileID: 1472672376}
+  cinemachineCamera2: {fileID: 2066472212}
 --- !u!1 &2066472208
 GameObject:
   m_ObjectHideFlags: 0
@@ -2411,7 +2412,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2066472209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2419,7 +2420,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2066472208}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1af963bfaaecddf41b84b3a1f0236831, type: 3}
   m_Name: 
@@ -2533,12 +2534,60 @@ Transform:
   m_GameObject: {fileID: 2066472208}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.72, y: 3.1502, z: -10}
+  m_LocalPosition: {x: -0.72, y: -0.35822344, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2120332514
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2120332515}
+  - component: {fileID: 2120332516}
+  m_Layer: 0
+  m_Name: SplitScreenManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2120332515
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120332514}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1251740771}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2120332516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120332514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2123b91b5cdf3c843a92419e585327d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SplitScreeController
+  player1: {fileID: 106506197}
+  player2: {fileID: 738025294}
+  mainCamera: {fileID: 519420031}
+  lineLenght: 50
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
