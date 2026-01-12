@@ -11,18 +11,18 @@ namespace BorePlayerMovement
     public class PlayerMovement : MonoBehaviour
     {
         [Header("Settings")]
-        [SerializeField] private float _time;
+        private float _time;
         [SerializeField] private float _frameLeftGrounded = float.MinValue;
-        private Rigidbody2D rb;
-        private BoxCollider2D col;
+        private Rigidbody2D _rb;
+        private BoxCollider2D _col;
         [SerializeField] private LayerMask layerMask;
         /* public InputActionAsset InputActions;
         private InputAction IA_moveAction;
         private InputAction IA_jumpAction;  */                  // Old Input System v. 0.1
-        private PlayerInput playerInput;
-        private InputAction moveAction;
-        private InputAction jumpAction;
-        private Vector2 moveAmount;
+        private PlayerInput _playerInput;
+        private InputAction _moveAction;
+        private InputAction _jumpAction;
+        private Vector2 _moveAmount;
 
         [Header("Parameters")]
         public float WalkSpeed = 5;
@@ -32,30 +32,20 @@ namespace BorePlayerMovement
         private bool isGrounded;
         private bool _grounded;
         [SerializeField] private float rayLenght = 0.02f;
-        public bool coyoteUsable;
+        public bool СoyoteUsable;
         public float CoyoteTime = 0.15f;
-        public bool canUseCoyote => coyoteUsable && !isGrounded && _time < _frameLeftGrounded + CoyoteTime;
+        public bool canUseCoyote => СoyoteUsable && !isGrounded && _time < _frameLeftGrounded + CoyoteTime;
 
         #region Initialization
-        /* private void OnEnable()
-        {
-            InputActions.FindActionMap("Player").Enable();
-        }
-        private void OnDisable()
-        {
-            InputActions.FindActionMap("Player").Disable();
-        }   */                                                          // Old Input System v. 0.1
 
         private void Awake()
         {
-            /* IA_moveAction = InputSystem.actions.FindAction("Move");
-            IA_jumpAction = InputSystem.actions.FindAction("Jump"); */ // Old Input System v. 0.1
-            playerInput = GetComponent<PlayerInput>();
-            moveAction = playerInput.actions["Move"];
-            jumpAction = playerInput.actions["Jump"];
+            _playerInput = GetComponent<PlayerInput>();
+            _moveAction = _playerInput.actions["Move"];
+            _jumpAction = _playerInput.actions["Jump"];
 
-            rb = GetComponent<Rigidbody2D>();
-            col = GetComponent<BoxCollider2D>();
+            _rb = GetComponent<Rigidbody2D>();
+            _col = GetComponent<BoxCollider2D>();
             layerMask = LayerMask.GetMask("Ground");
         }
         #endregion
@@ -63,10 +53,9 @@ namespace BorePlayerMovement
         #region PlayerState
         private void Update()
         {
-            moveAmount = moveAction.ReadValue<Vector2>();
-            // Debug.Log("Move = " + moveAction.ReadValue<Vector2>());
+            _moveAmount = _moveAction.ReadValue<Vector2>();
 
-            if (jumpAction.WasPressedThisFrame() && (isGrounded || canUseCoyote))
+            if (_jumpAction.WasPressedThisFrame() && (isGrounded || canUseCoyote))
             {
                 Jump();
             }
@@ -81,13 +70,13 @@ namespace BorePlayerMovement
 
         private void Walking()
         {
-            rb.linearVelocityX = moveAmount.x * WalkSpeed;
+            _rb.linearVelocityX = _moveAmount.x * WalkSpeed;
         }
 
         public void Jump()
         {
-            rb.AddForceY(JumpSpeed, ForceMode2D.Impulse);
-            coyoteUsable = false;
+            _rb.AddForceY(JumpSpeed, ForceMode2D.Impulse);
+            СoyoteUsable = false;
             _grounded = false;
             isGrounded = false;
         }
@@ -97,9 +86,9 @@ namespace BorePlayerMovement
         private void CheckGrounded()
         {
             // c - Center | l - Left | r - Right | rc - RayCast
-            Vector2 cOrigin = col.bounds.center - new Vector3(0, col.bounds.extents.y, 0);
-            Vector2 lOrigin = col.bounds.center - new Vector3(col.bounds.extents.x, col.bounds.extents.y, 0);
-            Vector2 rOrigin = col.bounds.center + new Vector3(col.bounds.extents.x, -col.bounds.extents.y, 0);
+            Vector2 cOrigin = _col.bounds.center - new Vector3(0, _col.bounds.extents.y, 0);
+            Vector2 lOrigin = _col.bounds.center - new Vector3(_col.bounds.extents.x, _col.bounds.extents.y, 0);
+            Vector2 rOrigin = _col.bounds.center + new Vector3(_col.bounds.extents.x, -_col.bounds.extents.y, 0);
 
             RaycastHit2D cRc = Physics2D.Raycast(cOrigin, Vector2.down, rayLenght, layerMask);
             RaycastHit2D lRc = Physics2D.Raycast(lOrigin, Vector2.down, rayLenght, layerMask);
@@ -110,7 +99,7 @@ namespace BorePlayerMovement
             if (!_grounded && isGrounded)
             {
                 _grounded = true;
-                coyoteUsable = true;
+                СoyoteUsable = true;
             }
             else if (_grounded && !isGrounded)
             {
