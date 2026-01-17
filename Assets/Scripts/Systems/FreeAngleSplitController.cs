@@ -6,8 +6,11 @@ public class FreeAngleSplitController : MonoBehaviour
     [Header("Components")]
     [SerializeField] private Transform player1;
     [SerializeField] private Transform player2;
-    [SerializeField] private CinemachineCamera cam1;
-    [SerializeField] private CinemachineCamera cam2;
+    [SerializeField] private Camera cam1;
+    [SerializeField] private Camera cam2;
+    [SerializeField] private CinemachineCamera cinemachineCam1;
+    [SerializeField] private CinemachineCamera cinemachineCam2;
+    [SerializeField] private CinemachineCamera cinemachineCamGroup;
 
     [Header("Material")]
     [SerializeField] private Material splitMaterial;
@@ -19,15 +22,19 @@ public class FreeAngleSplitController : MonoBehaviour
     [SerializeField] private float cameraOffset = 4f;
 
     private bool isSplit;
-    private CinemachinePositionComposer composer1;
-    private CinemachinePositionComposer composer2;
+    private CinemachinePositionComposer _composer1;
+    private CinemachinePositionComposer _composer2;
+    private CinemachineBrain _cinemaBrainCam1;
+    private CinemachineBrain _cinemaBrainCam2;
 
     void Awake()
     {
-        composer1 = cam1.GetComponent<CinemachinePositionComposer>();
-        composer2 = cam2.GetComponent<CinemachinePositionComposer>();
+        _composer1 = cinemachineCam1.GetComponent<CinemachinePositionComposer>();
+        _composer2 = cinemachineCam2.GetComponent<CinemachinePositionComposer>();
+        _cinemaBrainCam1 = cam1.GetComponent<CinemachineBrain>();
+        _cinemaBrainCam2 = cam2.GetComponent<CinemachineBrain>();
 
-        if (!composer1 || !composer2)
+        if (!_composer1 || !_composer2)
         {
             Debug.LogError("Position Composer cannot be found.");
         }
@@ -49,9 +56,12 @@ public class FreeAngleSplitController : MonoBehaviour
         if (!isSplit)
         {
             splitMaterial.SetFloat("_Softness", 1f);
-            splitMaterial.SetFloat("_SplitOffset", Mathf.Lerp(splitMaterial.GetFloat("_SplitOffset"), -1, 0.1f));
-            composer1.TargetOffset = Vector3.zero;
-            composer2.TargetOffset = Vector3.zero;
+            splitMaterial.SetFloat("_SplitOffset", Mathf.Lerp(splitMaterial.GetFloat("_SplitOffset"), -2f, 0.1f));
+            splitMaterial.SetFloat("_SplitLineWidth", Mathf.Lerp(splitMaterial.GetFloat("_SplitLineWidth"), 0f, Time.deltaTime * 5f));
+            _composer1.TargetOffset = Vector3.zero;
+            _composer2.TargetOffset = Vector3.zero;
+            _cinemaBrainCam1.ChannelMask = OutputChannels.Channel03;
+            _cinemaBrainCam2.ChannelMask = OutputChannels.Channel03;
             return;
         }
 
@@ -63,11 +73,13 @@ public class FreeAngleSplitController : MonoBehaviour
             normal.x * -offsetWeights.y
         );
 
-        composer1.TargetOffset = weightedNormal * cameraOffset;
-        composer2.TargetOffset = -weightedNormal * cameraOffset;
+        _composer1.TargetOffset = weightedNormal * cameraOffset;
+        _composer2.TargetOffset = -weightedNormal * cameraOffset;
+        _cinemaBrainCam1.ChannelMask = OutputChannels.Channel01;
+        _cinemaBrainCam2.ChannelMask = OutputChannels.Channel02;
 
         splitMaterial.SetVector("_SplitDir", new Vector4(-normal.y, normal.x, 0, 0));
         splitMaterial.SetFloat("_SplitOffset", Mathf.Lerp(splitMaterial.GetFloat("_SplitOffset"), 0, 0.1f));
-        splitMaterial.SetFloat("_Softness", 0.02f);
+        splitMaterial.SetFloat("_SplitLineWidth", Mathf.Lerp(splitMaterial.GetFloat("_SplitLineWidth"), 0.002f, Time.deltaTime * 5f));
     }
 }

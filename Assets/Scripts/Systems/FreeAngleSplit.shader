@@ -6,6 +6,9 @@ Shader "Custom/FreeAngleSplit"
         _TexB ("Texture B", 2D) = "white" {}
         _SplitDir ("Split Direction", Vector) = (1,0,0,0)
         _SplitOffset ("Split Offset", Float) = 0
+
+        _SplitLineWidth ("Split Line Width", Float) = 0
+        _SplitLineColor ("Split Line Color", Color) = (0,0,0,1)
     }
 
     SubShader
@@ -23,6 +26,8 @@ Shader "Custom/FreeAngleSplit"
             sampler2D _TexB;
             float4 _SplitDir;
             float _SplitOffset;
+            float _SplitLineWidth;
+            fixed4 _SplitLineColor;
 
             struct appdata
             {
@@ -48,6 +53,11 @@ Shader "Custom/FreeAngleSplit"
             {
                 float2 uv = i.uv * 2 - 1;
                 float d = dot(uv, normalize(_SplitDir.xy)) + _SplitOffset;
+
+                if (abs(d) < _SplitLineWidth)
+                {
+                    return _SplitLineColor;
+                }
 
                 if (d > 0)
                     return tex2D(_TexA, i.uv);
