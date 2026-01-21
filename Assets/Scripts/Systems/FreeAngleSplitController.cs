@@ -52,19 +52,7 @@ public class FreeAngleSplitController : MonoBehaviour
             isSplit = true;
         else if (isSplit && dist < mergeDistance)
             isSplit = false;
-
-        if (!isSplit)
-        {
-            splitMaterial.SetFloat("_Softness", 1f);
-            splitMaterial.SetFloat("_SplitOffset", Mathf.Lerp(splitMaterial.GetFloat("_SplitOffset"), -2f, 0.1f));
-            splitMaterial.SetFloat("_SplitLineWidth", Mathf.Lerp(splitMaterial.GetFloat("_SplitLineWidth"), 0f, Time.deltaTime * 5f));
-            _composer1.TargetOffset = Vector3.zero;
-            _composer2.TargetOffset = Vector3.zero;
-            _cinemaBrainCam1.ChannelMask = OutputChannels.Channel03;
-            _cinemaBrainCam2.ChannelMask = OutputChannels.Channel03;
-            return;
-        }
-
+        UpdateMerge(isSplit);
         Vector2 dir = (B - A).normalized;
         Vector2 mid = (A + B) * 0.5f;
         Vector2 normal = new Vector2(-dir.y, dir.x);
@@ -81,5 +69,20 @@ public class FreeAngleSplitController : MonoBehaviour
         splitMaterial.SetVector("_SplitDir", new Vector4(-normal.y, normal.x, 0, 0));
         splitMaterial.SetFloat("_SplitOffset", Mathf.Lerp(splitMaterial.GetFloat("_SplitOffset"), 0, 0.1f));
         splitMaterial.SetFloat("_SplitLineWidth", Mathf.Lerp(splitMaterial.GetFloat("_SplitLineWidth"), 0.002f, Time.deltaTime * 5f));
+    }
+
+    void UpdateMerge(bool isSplit)
+    {
+        if (!isSplit)
+        {
+            splitMaterial.SetFloat("_Softness", 1f);
+            splitMaterial.SetFloat("_SplitOffset", Mathf.Lerp(splitMaterial.GetFloat("_SplitOffset"), -2.5f, 0.1f));
+            splitMaterial.SetFloat("_SplitLineWidth", Mathf.Lerp(splitMaterial.GetFloat("_SplitLineWidth"), 0f, Time.deltaTime * 5f));
+            _composer1.TargetOffset = Vector3.zero;
+            _composer2.TargetOffset = Vector3.zero;
+            _cinemaBrainCam1.ChannelMask = OutputChannels.Channel03;
+            _cinemaBrainCam2.ChannelMask = OutputChannels.Channel03;
+            return;
+        }
     }
 }
