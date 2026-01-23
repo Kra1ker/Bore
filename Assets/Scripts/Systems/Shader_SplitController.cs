@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Cinemachine;
 
-public class FreeAngleSplitController : MonoBehaviour
+public class Shader_SplitController : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private Transform player1;
@@ -15,11 +15,18 @@ public class FreeAngleSplitController : MonoBehaviour
     [Header("Material")]
     [SerializeField] private Material splitMaterial;
 
-    [Header("Parameters")]
-    [SerializeField] private float splitDistance = 8f;
-    [SerializeField] private float mergeDistance = 5f;
+    [Header("Split Parameters")]
+    [SerializeField] private float splitDistance = 16f;
+    [SerializeField] private float mergeDistance = 15.5f;
     [SerializeField] private Vector2 offsetWeights = new Vector2(1f, 1f);
-    [SerializeField] private float cameraOffset = 4f;
+    [SerializeField] private float cameraOffset = 5f;
+
+    [Header("Zoom Parameters")]
+    [SerializeField] private float minZoom = 5f;
+    [SerializeField] private float maxZoom = 8f;
+    [SerializeField] private float zoomStartDistance = 3f;
+    [SerializeField] private float zoomEndDistance = 6f;
+    [SerializeField] private float zoomSmooth = 3f;
 
     private bool isSplit;
     private CinemachinePositionComposer _composer1;
@@ -46,16 +53,46 @@ public class FreeAngleSplitController : MonoBehaviour
         Vector2 B = player2.position;
 
         float dist = Vector2.Distance(A, B);
-        Debug.Log(dist);
 
         if (!isSplit && dist > splitDistance)
             isSplit = true;
+
         else if (isSplit && dist < mergeDistance)
             isSplit = false;
-        UpdateMerge(isSplit);
-        Vector2 dir = (B - A).normalized;
-        Vector2 mid = (A + B) * 0.5f;
+
+        if (!isSplit)
+        {
+            _cinemaBrainCam1.ChannelMask = OutputChannels.Channel03;
+            _cinemaBrainCam2.ChannelMask = OutputChannels.Channel03;
+            _composer1.TargetOffset = Vector3.zero;
+            _composer2.TargetOffset = Vector3.zero;
+
+            Merge();
+            Zoom(dist);
+            return;
+        }
+
+        Split(A, B);
+    }
+
+    void Merge()
+    {
+        splitMaterial.SetFloat("_Softness", 1f);
+        splitMaterial.SetFloat("_SplitOffset", 
+            Mathf.Lerp(splitMaterial.GetFloat("_SplitOffset"), -2.5f, 0.1f));
+        splitMaterial.SetFloat("_SplitLineWidth", 
+            Mathf.Lerp(splitMaterial.GetFloat("_SplitLineWidth"), 0f, Time.deltaTime * 5f));
+    }
+
+    void Split(Vector2 A, Vector2 B)
+    {
+        Vector2 delta = B - A;
+        if(delta.sqrMagnitude < 0.0001f)
+            return;
+
+        Vector2 dir = delta.normalized;
         Vector2 normal = new Vector2(-dir.y, dir.x);
+
         Vector2 weightedNormal = new Vector2(
             normal.y * offsetWeights.x,
             normal.x * -offsetWeights.y
@@ -67,22 +104,21 @@ public class FreeAngleSplitController : MonoBehaviour
         _cinemaBrainCam2.ChannelMask = OutputChannels.Channel02;
 
         splitMaterial.SetVector("_SplitDir", new Vector4(-normal.y, normal.x, 0, 0));
-        splitMaterial.SetFloat("_SplitOffset", Mathf.Lerp(splitMaterial.GetFloat("_SplitOffset"), 0, 0.1f));
-        splitMaterial.SetFloat("_SplitLineWidth", Mathf.Lerp(splitMaterial.GetFloat("_SplitLineWidth"), 0.002f, Time.deltaTime * 5f));
+        splitMaterial.SetFloat("_SplitOffset", 
+            Mathf.Lerp(splitMaterial.GetFloat("_SplitOffset"), 0, 0.1f));
+        splitMaterial.SetFloat("_SplitLineWidth", 
+            Mathf.Lerp(splitMaterial.GetFloat("_SplitLineWidth"), 0.002f, Time.deltaTime * 5f));
     }
 
-    void UpdateMerge(bool isSplit)
+    void Zoom(float distance)
     {
-        if (!isSplit)
-        {
-            splitMaterial.SetFloat("_Softness", 1f);
-            splitMaterial.SetFloat("_SplitOffset", Mathf.Lerp(splitMaterial.GetFloat("_SplitOffset"), -2.5f, 0.1f));
-            splitMaterial.SetFloat("_SplitLineWidth", Mathf.Lerp(splitMaterial.GetFloat("_SplitLineWidth"), 0f, Time.deltaTime * 5f));
-            _composer1.TargetOffset = Vector3.zero;
-            _composer2.TargetOffset = Vector3.zero;
-            _cinemaBrainCam1.ChannelMask = OutputChannels.Channel03;
-            _cinemaBrainCam2.ChannelMask = OutputChannels.Channel03;
-            return;
-        }
+        float t = Mathf.InverseLerp(zoomStartDistance, zoomEndDistance, distance);
+        t = Mathf.Clamp01(t);
+        float targetZoom = Mathf.Lerp(minZoom, maxZoom, t);
+
+        cinemachineCamGroup.Lens.OrthographicSize = 
+            Mathf.Lerp(cinemachineCamGroup.Lens.OrthographicSize, 
+            targetZoom, 
+            Time.deltaTime * zoomSmooth);
     }
 }

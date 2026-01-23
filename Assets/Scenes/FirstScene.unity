@@ -1733,6 +1733,11 @@ MonoBehaviour:
   mergeDistance: 15.5
   offsetWeights: {x: 1, y: 1}
   cameraOffset: 5
+  minZoom: 5
+  maxZoom: 8
+  zoomStartDistance: 3
+  zoomEndDistance: 6
+  zoomSmooth: 3
 --- !u!4 &738025294 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4978193649768489048, guid: a446fbe0f9bad5a4784997cdd92c5167, type: 3}
@@ -2544,6 +2549,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2211588380266436927, guid: a446fbe0f9bad5a4784997cdd92c5167, type: 3}
+      propertyPath: m_ForceSendLayers.m_Bits
+      value: 383
+      objectReference: {fileID: 0}
+    - target: {fileID: 2211588380266436927, guid: a446fbe0f9bad5a4784997cdd92c5167, type: 3}
+      propertyPath: m_ForceReceiveLayers.m_Bits
+      value: 383
+      objectReference: {fileID: 0}
     - target: {fileID: 4978193649768489048, guid: a446fbe0f9bad5a4784997cdd92c5167, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.25
@@ -3872,9 +3885,9 @@ SceneRoots:
   - {fileID: 1829699790}
   - {fileID: 693316375}
   - {fileID: 2096650946}
-  - {fileID: 1251740771}
   - {fileID: 869161033}
   - {fileID: 130847444}
   - {fileID: 725128637}
   - {fileID: 1346365372}
   - {fileID: 221403356}
+  - {fileID: 1251740771}
