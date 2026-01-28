@@ -77,11 +77,22 @@ public class Shader_SplitController : MonoBehaviour
 
     void Merge()
     {
-        splitMaterial.SetFloat("_Softness", 1f);
         splitMaterial.SetFloat("_SplitOffset", 
             Mathf.Lerp(splitMaterial.GetFloat("_SplitOffset"), -2.5f, 0.1f));
         splitMaterial.SetFloat("_SplitLineWidth", 
             Mathf.Lerp(splitMaterial.GetFloat("_SplitLineWidth"), 0f, Time.deltaTime * 5f));
+    }
+
+    void Zoom(float distance)
+    {
+        float t = Mathf.InverseLerp(zoomStartDistance, zoomEndDistance, distance);
+        t = Mathf.Clamp01(t);
+        float targetZoom = Mathf.Lerp(minZoom, maxZoom, t);
+
+        cinemachineCamGroup.Lens.OrthographicSize = 
+            Mathf.Lerp(cinemachineCamGroup.Lens.OrthographicSize, 
+            targetZoom, 
+            Time.deltaTime * zoomSmooth);
     }
 
     void Split(Vector2 A, Vector2 B)
@@ -108,17 +119,5 @@ public class Shader_SplitController : MonoBehaviour
             Mathf.Lerp(splitMaterial.GetFloat("_SplitOffset"), 0, 0.1f));
         splitMaterial.SetFloat("_SplitLineWidth", 
             Mathf.Lerp(splitMaterial.GetFloat("_SplitLineWidth"), 0.002f, Time.deltaTime * 5f));
-    }
-
-    void Zoom(float distance)
-    {
-        float t = Mathf.InverseLerp(zoomStartDistance, zoomEndDistance, distance);
-        t = Mathf.Clamp01(t);
-        float targetZoom = Mathf.Lerp(minZoom, maxZoom, t);
-
-        cinemachineCamGroup.Lens.OrthographicSize = 
-            Mathf.Lerp(cinemachineCamGroup.Lens.OrthographicSize, 
-            targetZoom, 
-            Time.deltaTime * zoomSmooth);
     }
 }

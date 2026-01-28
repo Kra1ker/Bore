@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Unity.Collections;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,12 +17,11 @@ namespace BorePlayerMovement
         private Rigidbody2D _rb;
         private BoxCollider2D _col;
         [SerializeField] private LayerMask layerMask;
-        /* public InputActionAsset InputActions;
-        private InputAction IA_moveAction;
-        private InputAction IA_jumpAction;  */                  // Old Input System v. 0.1
         private PlayerInput _playerInput;
         private InputAction _moveAction;
         private InputAction _jumpAction;
+        private InputAction _exitAction;
+        private InputAction _restartAction;
         private Vector2 _moveAmount;
 
         [Header("Parameters")]
@@ -43,6 +43,9 @@ namespace BorePlayerMovement
             _playerInput = GetComponent<PlayerInput>();
             _moveAction = _playerInput.actions["Move"];
             _jumpAction = _playerInput.actions["Jump"];
+            _exitAction = _playerInput.actions["Exit"];
+            _restartAction = _playerInput.actions["Restart"];
+            
 
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<BoxCollider2D>();
@@ -58,6 +61,14 @@ namespace BorePlayerMovement
             if (_jumpAction.WasPressedThisFrame() && (isGrounded || canUseCoyote))
             {
                 Jump();
+            }
+            if(_restartAction.WasPressedThisFrame())
+            {
+                Restart();
+            }
+            if(_exitAction.WasPressedThisFrame())
+            {
+                Exit();
             }
         }
 
@@ -81,6 +92,21 @@ namespace BorePlayerMovement
             isGrounded = false;
         }
         #endregion
+
+        public void Restart()
+        {
+            Scene current = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(current.buildIndex);
+        }
+        
+        public void Exit()
+        {
+            Application.Quit();
+
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+            #endif
+        }
 
         #region Colision
         private void CheckGrounded()
