@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using Unity.Cinemachine;
-using UnityEditor.Rendering;
 
 public class SplitScreenControler : MonoBehaviour
 {

@@ -35,9 +35,9 @@ Material:
     m_Floats:
     - _Softness: 1
     - _SplitLineWidth: 0.002
-    - _SplitOffset: -1.4610686e-35
+    - _SplitOffset: -6e-45
     m_Colors:
-    - _SplitDir: {r: 0.9852307, g: 0.17123257, b: 0, a: 0}
+    - _SplitDir: {r: -0.94179535, g: -0.3361867, b: 0, a: 0}
     - _SplitLineColor: {r: 0, g: 0, b: 0, a: 1}
     - _SplitNormal: {r: -0.4494441, g: 0.89330846, b: 0, a: 0}
   m_BuildTextureStacks: []
