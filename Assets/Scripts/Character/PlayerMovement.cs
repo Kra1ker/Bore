@@ -1,6 +1,3 @@
-using NUnit.Framework;
-using Unity.Collections;
-using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,6 +17,7 @@ namespace BorePlayerMovement
         private PlayerInput _playerInput;
         private InputAction _moveAction;
         private InputAction _jumpAction;
+        private InputAction _attackAction;
         private InputAction _exitAction;
         private InputAction _restartAction;
         private Vector2 _moveAmount;
@@ -43,6 +41,7 @@ namespace BorePlayerMovement
             _playerInput = GetComponent<PlayerInput>();
             _moveAction = _playerInput.actions["Move"];
             _jumpAction = _playerInput.actions["Jump"];
+            _attackAction = _playerInput.actions["Attack"];
             _exitAction = _playerInput.actions["Exit"];
             _restartAction = _playerInput.actions["Restart"];
             
@@ -61,6 +60,10 @@ namespace BorePlayerMovement
             if (_jumpAction.WasPressedThisFrame() && (isGrounded || canUseCoyote))
             {
                 Jump();
+            }
+            if(_attackAction.WasPressedThisFrame())
+            {
+                Attack();
             }
             if(_restartAction.WasPressedThisFrame())
             {
@@ -90,6 +93,13 @@ namespace BorePlayerMovement
             СoyoteUsable = false;
             _grounded = false;
             isGrounded = false;
+        }
+
+        public void Attack()
+        {
+            Debug.Log(this + " attacked.");
+            Vector2 cOrigin = _col.bounds.center - new Vector3(_col.bounds.extents.x, 0, 0);
+            Debug.DrawRay(cOrigin, Vector2.left * 1, Color.red);
         }
         #endregion
 
