@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Cinemachine;
+using UnityEditor.Rendering;
 
 public class Shader_SplitController : MonoBehaviour
 {
@@ -66,6 +67,8 @@ public class Shader_SplitController : MonoBehaviour
             _cinemaBrainCam2.ChannelMask = OutputChannels.Channel03;
             _composer1.TargetOffset = Vector3.zero;
             _composer2.TargetOffset = Vector3.zero;
+            cam1.gameObject.SetActive(false);
+            cinemachineCam1.gameObject.SetActive(false);
 
             Merge();
             Zoom(dist);
@@ -108,7 +111,8 @@ public class Shader_SplitController : MonoBehaviour
             normal.y * offsetWeights.x,
             normal.x * -offsetWeights.y
         );
-
+        cam1.gameObject.SetActive(true);
+        cinemachineCam1.gameObject.SetActive(true);
         _composer1.TargetOffset = weightedNormal * cameraOffset;
         _composer2.TargetOffset = -weightedNormal * cameraOffset;
         _cinemaBrainCam1.ChannelMask = OutputChannels.Channel01;
